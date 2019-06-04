@@ -31,7 +31,7 @@ Tome_Rater.add_book_to_user(novel3, "david@computation.org", 4)
 
 
 #Uncomment these to test your functions:
-# Tome_Rater.print_catalog()
+Tome_Rater.print_catalog()
 Tome_Rater.print_users()
 
 # print("Most positive user:")

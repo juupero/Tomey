@@ -1,3 +1,50 @@
+class TomeRater:
+    def __init__(self):
+        self.users = {}
+        self.books = {}
+
+    def create_book(self, title, isbn):
+        return Book(title, isbn)
+
+    def create_novel(self, title, author, isbn):
+        return Fiction(title, author, isbn)
+
+    def create_non_fiction(self, title, subject, level, isbn):
+        return Non_Fiction(title, subject, level, isbn)
+
+    def add_book_to_user(self, book, email, rating = None):
+        if email in self.users:
+            email.read_book(book, rating)
+            book.add_rating(rating)
+            if book in self.books:
+                self.books[book] += 1
+            else:
+                self.books[book] = 1
+
+    def add_user(self, name, email, user_books = None):
+        self.user = User(name, email)
+        if user_books is not None:
+            for book in user_books:
+                self.add_book_to_user(book, email)
+
+    def print_catalog(self):
+        for book in self.books:
+            print(book)
+
+    def print_users(self):
+        for user in self.users:
+            print(user)
+
+    def most_read_book(self):
+        most_popular_book = max(self.books, key = self.books.get)
+        return most_popular_book
+
+    # def highest_rated_book(self):
+    #     best_rated_book =
+
+
+
+
 class User(object):
     def __init__(self, name, email):
         self.name = name
@@ -28,14 +75,23 @@ class User(object):
         for rating in self.books.values():
             if rating is not None:
                 book_ratings.append(rating)
-        return book_ratings / len(book_ratings)
-
+        average_rating = sum(book_ratings) / len(book_ratings)
+        return average_rating
 
 class Book(object):
     def __init__(self, title, isbn):
         self.title = title
         self.isbn = isbn
         self.ratings = []
+
+    def __eq__(self, other_book):
+        if self.title == other_book.title and self.isbn == other_book.isbn:
+            return True
+        else:
+            return False
+
+    def __hash__(self):
+        return hash((self.title, self.isbn))
 
     def get_title(self):
         return self.title
@@ -52,12 +108,6 @@ class Book(object):
             self.ratings.append(rating)
         else:
             print("Invalid Rating")
-
-    def __eq__(self, other_book):
-        if self.title == other_book.title and self.isbn == other_book.isbn:
-            return True
-        else:
-            return False
 
 class Fiction(Book):
     def __init__(self, title, author, isbn):
@@ -84,7 +134,6 @@ class Non_Fiction(Book):
 
     def __repr__(self):
         return "{}, a {} manual on {}".format(self.title, self.level, self.subject)
-
 
 
 
