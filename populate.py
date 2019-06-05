@@ -3,13 +3,13 @@ from TomeRater import *
 Tome_Rater = TomeRater()
 
 #Create some books:
-book1 = Tome_Rater.create_book("Society of Mind", 12345678)
-novel1 = Tome_Rater.create_novel("Alice In Wonderland", "Lewis Carroll", 12345)
+book1 = Tome_Rater.create_book("Society of Mind", 12345678, 15)
+novel1 = Tome_Rater.create_novel("Alice In Wonderland", "Lewis Carroll", 12345, 12)
 novel1.set_isbn(9781536831139)
-nonfiction1 = Tome_Rater.create_non_fiction("Automate the Boring Stuff", "Python", "beginner", 1929452)
-nonfiction2 = Tome_Rater.create_non_fiction("Computing Machinery and Intelligence", "AI", "advanced", 11111938)
-novel2 = Tome_Rater.create_novel("The Diamond Age", "Neal Stephenson", 10101010)
-novel3 = Tome_Rater.create_novel("There Will Come Soft Rains", "Ray Bradbury", 10001000)
+nonfiction1 = Tome_Rater.create_non_fiction("Automate the Boring Stuff", "Python", "beginner", 1929452, 29)
+nonfiction2 = Tome_Rater.create_non_fiction("Computing Machinery and Intelligence", "AI", "advanced", 11111938, 33)
+novel2 = Tome_Rater.create_novel("The Diamond Age", "Neal Stephenson", 10101010, 59)
+novel3 = Tome_Rater.create_novel("There Will Come Soft Rains", "Ray Bradbury", 10001000, 44)
 
 #Create users:
 Tome_Rater.add_user("Alan Turing", "alan@turing.com")

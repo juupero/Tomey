@@ -1,16 +1,16 @@
 class TomeRater:
     def __init__(self):
-        self.users = {}
-        self.books = {}
+        self.users = {} # key: user’s email, value: corresponding User object
+        self.books = {} # key: Book object, value: the number of Users that have read it
 
-    def create_book(self, title, isbn):
-        return Book(title, isbn)
+    def create_book(self, title, isbn, price = 0):
+        return Book(title, isbn, price)
 
-    def create_novel(self, title, author, isbn):
-        return Fiction(title, author, isbn)
+    def create_novel(self, title, author, isbn, price = 0):
+        return Fiction(title, author, isbn, price)
 
-    def create_non_fiction(self, title, subject, level, isbn):
-        return Non_Fiction(title, subject, level, isbn)
+    def create_non_fiction(self, title, subject, level, isbn, price = 0):
+        return Non_Fiction(title, subject, level, isbn, price)
 
     def add_book_to_user(self, book, email, rating = None):
         if email in self.users:
@@ -75,6 +75,10 @@ class TomeRater:
                 kindest_users.append(email)
         return kindest_users
 
+    def get_n_most_expensive_books(self, n):
+        most_expensive_books = sorted(self.books.items(), key=lambda book: self.books[book].get_price()):
+        return most_expensive_books
+
 class User(object):
     def __init__(self, name, email):
         self.name = name
@@ -99,16 +103,20 @@ class User(object):
 
     def get_average_rating(self):
         user_ratings = [self.books[book] for book in self.books if self.books[book] is not None]
-        average_rating = sum(user_ratings) / len(user_ratings)
+        try:
+            average_rating = sum(user_ratings) / len(user_ratings)
+        except ZeroDivisionError:
+            print("There are no books with user ratings. Add some ratings and try again.")
         return average_rating
 
     def read_book(self, book, rating = None):
         self.books[book] = rating
 
 class Book(object):
-    def __init__(self, title, isbn):
+    def __init__(self, title, isbn, price):
         self.title = title
         self.isbn = isbn
+        self.price = price
         self.ratings = []
 
     def __repr__(self):
@@ -129,6 +137,9 @@ class Book(object):
     def get_isbn(self):
         return self.isbn
 
+    def get_price(self):
+        return self.price
+
     def set_isbn(self, new_isbn):
         self.isbn = new_isbn
         print("Book {}'s ISBN has been updated!".format(self.isbn))
@@ -141,17 +152,16 @@ class Book(object):
 
     def get_average_rating(self):
         book_ratings = [rating for rating in self.ratings if rating is not None]
-        # book_ratings = []
-        # for rating in self.ratings:
-        #     if rating is not None:
-        #         book_ratings.append(rating)
-        average_rating = sum(book_ratings) / len(book_ratings)
+        try:
+            average_rating = sum(book_ratings) / len(book_ratings)
+        except ZeroDivisionError:
+            print("There are no books with user ratings. Add some ratings and try again.")
         return average_rating
 
 
 class Fiction(Book):
-    def __init__(self, title, author, isbn):
-        super().__init__(title, isbn)
+    def __init__(self, title, author, isbn, price):
+        super().__init__(title, isbn, price)
         self.author = author
 
     def get_author(self):
@@ -161,8 +171,8 @@ class Fiction(Book):
         return "{} by {}".format(self.title, self.author)
 
 class Non_Fiction(Book):
-    def __init__(self, title, subject, level, isbn):
-        super().__init__(title, isbn)
+    def __init__(self, title, subject, level, isbn, price):
+        super().__init__(title, isbn, price)
         self.subject = subject
         self.level = level
 
