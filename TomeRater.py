@@ -98,10 +98,7 @@ class User(object):
             return False
 
     def get_average_rating(self):
-        user_ratings = []
-        for book in self.books:
-            if self.books[book] is not None:
-                user_ratings.append(self.books[book])
+        user_ratings = [self.books[book] for book in self.books if self.books[book] is not None]
         average_rating = sum(user_ratings) / len(user_ratings)
         return average_rating
 
@@ -143,10 +140,11 @@ class Book(object):
             print("Invalid Rating")
 
     def get_average_rating(self):
-        book_ratings = []
-        for rating in self.ratings:
-            if rating is not None:
-                book_ratings.append(rating)
+        book_ratings = [rating for rating in self.ratings if rating is not None]
+        # book_ratings = []
+        # for rating in self.ratings:
+        #     if rating is not None:
+        #         book_ratings.append(rating)
         average_rating = sum(book_ratings) / len(book_ratings)
         return average_rating
 
