@@ -88,6 +88,26 @@ class User(object):
         self.email = email
         self.books = {}
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        if type(name) is not str:
+            raise ValueError("Invalid Name, it has to be a string.")
+        self._name = name
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        if type(email) is not str or "@" not in email:
+            raise ValueError("Invalid Email, it has to be a string with an '@'.")
+        self._email = email
+
     def get_email(self):
         return self.email
 
@@ -117,19 +137,40 @@ class User(object):
 
 class Book(object):
     def __init__(self, title, isbn, price):
-        assert type(title) is str, "Invalid Title"
-        assert type(isbn) is int, "Invalid ISBN"
-        # assert type(price) is int and price > 0, "Invalid Price"
         self.title = title
         self.isbn = isbn
         self.price = price
         self.ratings = []
 
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, title):
+        if type(title) is not str:
+            raise ValueError("Invalid Title, it has to be a string.")
+        self._title = title
+
+    @property
+    def isbn(self):
+        return self._title
+
+    @isbn.setter
+    def isbn(self, isbn):
+        if isbn < 0 or type(isbn) is not int:
+            raise ValueError("ISBN cannot be negative")
+        self._isbn = isbn
+
+    @property
+    def price(self):
+        return self._price
+
     @price.setter
     def price(self, price):
         if price < 0:
-            raise ValueError("price cannot be negative")
-        self.price = price
+            raise ValueError("Price cannot be negative")
+        self._price = price
 
     def __repr__(self):
         return "{}".format(self.title)
@@ -153,19 +194,12 @@ class Book(object):
         return self.price
 
     def set_isbn(self, new_isbn):
-        if type(new_isbn) is int:
-            self.isbn = new_isbn
-            print("Book {}'s ISBN has been updated!".format(self.isbn))
-        else:
-            print("Invalid ISBN")
-
+        self.isbn = new_isbn
+        print("Book {}'s ISBN has been updated!".format(self.isbn))
 
     def set_price(self, new_price):
-        if type(new_price) is int and new_price > 0:
-            self.price = new_price
-            print("Book {}'s price has been updated!".format(self.price))
-        else:
-            print("Invalid Price")
+        self.price = new_price
+        print("Book {}'s price has been updated!".format(self.price))
 
     def add_rating(self, rating):
         if type(rating) is int and 0 <= rating <= 4:

@@ -10,14 +10,14 @@ book1.set_price(25)
 nonfiction1 = Tome_Rater.create_non_fiction("Automate the Boring Stuff", "Python", "beginner", 1929452, 29)
 nonfiction2 = Tome_Rater.create_non_fiction("Computing Machinery and Intelligence", "AI", "advanced", 11111938, 33)
 novel2 = Tome_Rater.create_novel("The Diamond Age", "Neal Stephenson", 10101010, 59)
-novel3 = Tome_Rater.create_novel("There Will Come Soft Rains", "Ray Bradbury", 10001000, -44)
+novel3 = Tome_Rater.create_novel("There Will Come Soft Rains", "Ray Bradbury", 10001000, 44)
 
 #Create users:
 Tome_Rater.add_user("Alan Turing", "alan@turing.com")
 Tome_Rater.add_user("David Marr", "david@computation.org")
 
 #Add a user with three books already read:
-Tome_Rater.add_user("Marvin Minsky", "marvin@mit.edu", user_books=[book1, novel1, nonfiction1])
+Tome_Rater.add_user("Marvin Minsky", "marvinmit.edu", user_books=[book1, novel1, nonfiction1])
 
 #Add books to a user one by one, with ratings:
 Tome_Rater.add_book_to_user(book1, "alan@turing.com", 1)
@@ -41,4 +41,6 @@ print("Highest rated book:")
 print(Tome_Rater.highest_rated_book())
 print("Most read book:")
 print(Tome_Rater.most_read_book())
-print(Tome_Rater.get_n_most_expensive_books(3))
+number_of_books = 3
+print("{} of the most expensive books:".format(number_of_books))
+print(Tome_Rater.get_n_most_expensive_books(number_of_books))
