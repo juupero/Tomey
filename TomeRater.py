@@ -40,10 +40,10 @@ class TomeRater:
 
     def most_read_book(self):
         max_read_count = 0
-        most_popular_books = [] # In case there are more than one book with as many reads
+        most_popular_books = []
         for book in self.books:
             if self.books[book] > max_read_count:
-                del most_popular_books[:] # Empty the list in case there is a book with more reads
+                del most_popular_books[:]
                 max_read_count = self.books[book]
                 most_popular_books.append(book)
             elif self.books[book] == max_read_count:
@@ -52,10 +52,10 @@ class TomeRater:
 
     def highest_rated_book(self):
         highest_rating = 0
-        best_rated_books = [] # In case there are more than one book with the same rating
+        best_rated_books = []
         for book in self.books:
             if book.get_average_rating() > highest_rating:
-                del best_rated_books[:] # Empty the list in case there is a book with better rating
+                del best_rated_books[:]
                 highest_rating = book.get_average_rating()
                 best_rated_books.append(book)
             elif book.get_average_rating() == highest_rating:
@@ -64,11 +64,11 @@ class TomeRater:
 
     def most_positive_user(self):
         highest_positivity = 0
-        kindest_users = [] # In case there are more than one user with the same positivity rating
+        kindest_users = []
         for email in self.users:
             user = self.users[email]
             if user.get_average_rating() > highest_positivity:
-                del kindest_users[:] # Empty the list in case there is a book with a better rating
+                del kindest_users[:]
                 highest_positivity = user.get_average_rating()
                 kindest_users.append(email)
             elif user.get_average_rating() == highest_positivity:
@@ -76,8 +76,11 @@ class TomeRater:
         return kindest_users
 
     def get_n_most_expensive_books(self, n):
-        most_expensive_books = sorted(self.books.items(), key=lambda book: self.books[book].get_price()):
-        return most_expensive_books
+        book_price_list = [(key, key.get_price()) for key in self.books]
+        sorted_book_price_list = sorted(book_price_list,key=lambda tup: tup[1], reverse=True)
+        return sorted_book_price_list[:n]
+        # for key in sorted(self.books, key = lambda title: self.books[title].get_price()):
+        #     print(key)
 
 class User(object):
     def __init__(self, name, email):
@@ -114,10 +117,19 @@ class User(object):
 
 class Book(object):
     def __init__(self, title, isbn, price):
+        assert type(title) is str, "Invalid Title"
+        assert type(isbn) is int, "Invalid ISBN"
+        # assert type(price) is int and price > 0, "Invalid Price"
         self.title = title
         self.isbn = isbn
         self.price = price
         self.ratings = []
+
+    @price.setter
+    def price(self, price):
+        if price < 0:
+            raise ValueError("price cannot be negative")
+        self.price = price
 
     def __repr__(self):
         return "{}".format(self.title)
@@ -141,8 +153,19 @@ class Book(object):
         return self.price
 
     def set_isbn(self, new_isbn):
-        self.isbn = new_isbn
-        print("Book {}'s ISBN has been updated!".format(self.isbn))
+        if type(new_isbn) is int:
+            self.isbn = new_isbn
+            print("Book {}'s ISBN has been updated!".format(self.isbn))
+        else:
+            print("Invalid ISBN")
+
+
+    def set_price(self, new_price):
+        if type(new_price) is int and new_price > 0:
+            self.price = new_price
+            print("Book {}'s price has been updated!".format(self.price))
+        else:
+            print("Invalid Price")
 
     def add_rating(self, rating):
         if type(rating) is int and 0 <= rating <= 4:
