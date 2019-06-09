@@ -77,10 +77,15 @@ class TomeRater:
 
     def get_n_most_expensive_books(self, n):
         book_price_list = [(key, key.get_price()) for key in self.books]
-        sorted_book_price_list = sorted(book_price_list,key=lambda tup: tup[1], reverse=True)
+        sorted_book_price_list = sorted(book_price_list, key=lambda tup: tup[1], reverse=True)
         return sorted_book_price_list[:n]
-        # for key in sorted(self.books, key = lambda title: self.books[title].get_price()):
-        #     print(key)
+
+    def get_worth_of_user(self, user_email):
+        user_object = self.users[user_email]
+        user_book_worth = sum([key.get_price() for key in user_object.books])
+        return (user_email, user_book_worth)
+
+
 
 class User(object):
     def __init__(self, name, email):
@@ -205,7 +210,7 @@ class Book(object):
         if type(rating) is int and 0 <= rating <= 4:
             self.ratings.append(rating)
         else:
-            print("Invalid Rating")
+            print("Invalid Rating, the rating was not added.")
 
     def get_average_rating(self):
         book_ratings = [rating for rating in self.ratings if rating is not None]
@@ -214,6 +219,8 @@ class Book(object):
         except ZeroDivisionError:
             print("There are no books with user ratings. Add some ratings and try again.")
         return average_rating
+
+
 
 
 class Fiction(Book):
