@@ -3,6 +3,16 @@ class TomeRater:
         self.users = {} # key: user’s email, value: corresponding User object
         self.books = {} # key: Book object, value: the number of Users that have read it
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        if type(name) is not str:
+            raise ValueError("Invalid Name, it has to be a string.")
+        self._name = name
+
     def create_book(self, title, isbn, price = 0):
         return Book(title, isbn, price)
 
