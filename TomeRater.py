@@ -13,13 +13,13 @@ class TomeRater:
             raise ValueError("Invalid Name, it has to be a string.")
         self._name = name
 
-    def create_book(self, title, isbn, price = 0):
+    def create_book(self, title, isbn, price = None):
         return Book(title, isbn, price)
 
-    def create_novel(self, title, author, isbn, price = 0):
+    def create_novel(self, title, author, isbn, price = None):
         return Fiction(title, author, isbn, price)
 
-    def create_non_fiction(self, title, subject, level, isbn, price = 0):
+    def create_non_fiction(self, title, subject, level, isbn, price = None):
         return Non_Fiction(title, subject, level, isbn, price)
 
     def add_book_to_user(self, book, email, rating = None):
@@ -86,22 +86,34 @@ class TomeRater:
         return kindest_users
 
     def get_n_most_expensive_books(self, n):
-        book_price_list = [(key, key.get_price()) for key in self.books]
-        sorted_book_price_list = sorted(book_price_list, key=lambda tup: tup[1], reverse=True)
-        return sorted_book_price_list[:n]
+        amount_of_books = len(self.books)
+        if amount_of_books >= n:
+            book_price_list = [(book, book.get_price()) for book in self.books]
+            sorted_book_price_list = sorted(book_price_list, key=lambda tup: tup[1], reverse=True)
+            return sorted_book_price_list[:n]
+        print("You have requested more books than there is ({}) in book TomeRater.".format(amount_of_books))
 
     def get_worth_of_user(self, user_email):
-        user_object = self.users[user_email]
-        user_book_worth = sum([key.get_price() for key in user_object.books])
-        return (user_email, user_book_worth)
-
-
+        if user_email in self.users:
+            user_object = self.users[user_email]
+            user_book_worth = sum([key.get_price() for key in user_object.books])
+            return (user_email, user_book_worth)
+        print("User {} has not been registered to TomeRate".format(user_email))
 
 class User(object):
     def __init__(self, name, email):
         self.name = name
         self.email = email
         self.books = {}
+
+    def __repr__(self):
+        print("User {}, email: {}, books read: {}".format(self.name, self.email, len(self.books)))
+
+    def __eq__(self, other_user):
+        if self.name == other_user.name and self.email == other_user.email:
+            return True
+        else:
+            return False
 
     @property
     def name(self):
@@ -129,15 +141,6 @@ class User(object):
     def change_email(self, address):
         self.email = address
         print("User {} has been updated!".format(self.name))
-
-    def __repr__(self):
-        print("User {}, email: {}, books read: {}".format(self.name, self.email, len(self.books)))
-
-    def __eq__(self, other_user):
-        if self.name == other_user.name and self.email == other_user.email:
-            return True
-        else:
-            return False
 
     def get_average_rating(self):
         user_ratings = [self.books[book] for book in self.books if self.books[book] is not None]
@@ -173,8 +176,8 @@ class Book(object):
 
     @isbn.setter
     def isbn(self, isbn):
-        if isbn < 0 or type(isbn) is not int:
-            raise ValueError("ISBN cannot be negative")
+        if type(isbn) is not int or isbn < 0:
+            raise ValueError("Invalid ISBN")
         self._isbn = isbn
 
     @property
@@ -183,8 +186,8 @@ class Book(object):
 
     @price.setter
     def price(self, price):
-        if price < 0:
-            raise ValueError("Price cannot be negative")
+        if type(price) is not int and type(price) is not float or price < 0:
+            raise ValueError("Invalid price")
         self._price = price
 
     def __repr__(self):
@@ -214,7 +217,7 @@ class Book(object):
 
     def set_price(self, new_price):
         self.price = new_price
-        print("Book {}'s price has been updated!".format(self.price))
+        print("Book {}'s price has been updated to {}!".format(self.title, self.price))
 
     def add_rating(self, rating):
         if type(rating) is int and 0 <= rating <= 4:
@@ -230,13 +233,20 @@ class Book(object):
             print("There are no books with user ratings. Add some ratings and try again.")
         return average_rating
 
-
-
-
 class Fiction(Book):
     def __init__(self, title, author, isbn, price):
         super().__init__(title, isbn, price)
         self.author = author
+
+    @property
+    def author(self):
+        return self._author
+
+    @author.setter
+    def author(self, author):
+        if type(author) is not str:
+            raise ValueError("Invalid Author, it has to be a string.")
+        self._author = author
 
     def get_author(self):
         return self.author
@@ -250,6 +260,26 @@ class Non_Fiction(Book):
         self.subject = subject
         self.level = level
 
+    @property
+    def subject(self):
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        if type(subject) is not str:
+            raise ValueError("Invalid Subject, it has to be a string.")
+        self._subject = subject
+
+    @property
+    def level(self):
+        return self._level
+
+    @level.setter
+    def level(self, level):
+        if type(level) is not str:
+            raise ValueError("Invalid Level, it has to be a string.")
+        self._level = level
+
     def get_subject(self):
         return self.subject
 
@@ -258,9 +288,3 @@ class Non_Fiction(Book):
 
     def __repr__(self):
         return "{} - a {} manual on {}".format(self.title, self.level.upper(), self.subject)
-
-
-
-
-
-
