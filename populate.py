@@ -77,5 +77,8 @@ class TestUserBookWorth(unittest.TestCase):
     def test_equal_user_worh(self):
         self.assertEqual(round(Tome_Rater.get_worth_of_user("alan@turing.com")[1]), 156)
 
+    def test_user_not_exist(self):
+        self.assertIsNone(Tome_Rater.get_worth_of_user("i@dont.exist"))
+
 if __name__ == '__main__':
     unittest.main()
